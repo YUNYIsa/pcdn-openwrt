@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# 读取 IPES 序列号
+sn=$(cat /etc/ipes/bin/ipes_sn)
+
+# 发送注册请求
+response=$(curl -sSL "http://183.134.244.181:51139/ipes_register?ipes_sn=$sn")
+
+# 解析响应信息
+ret_code=$(echo "$response" | jq -r '.ret.code')
+snzt=$(echo "$response" | jq -r '.ret.message')
+
+# 输出注册结果
+echo "$snzt"
+
+
+
+# 退出脚本
+exit 0

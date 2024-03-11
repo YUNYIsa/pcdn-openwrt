@@ -1,0 +1,58 @@
+#!/bin/sh /etc/rc.common
+
+
+START=98
+
+line_to_check="0 */6 * * * bash /etc/dogbox/snzt"
+
+start() {
+
+  area=$(uci get tietie.@tietie[0].area 2> /dev/null)
+    case "$area" in
+    open)
+
+      sleep 10 #等待前端提交修改
+      
+      /etc/ipes/bin/ipes start
+
+      if grep -q "$line_to_check" /etc/rc.local; then
+          echo "已存在指定的行。"
+      else
+          # 如果该行不存在，则将其添加到/etc/rc.local文件末尾
+          echo "$line_to_check" >> /etc/rc.local
+          echo "指定的行已添加到/etc/rc.local。"
+      fi
+
+      chmod 777 /etc/rc.local
+      ;;
+    
+    close)
+
+      sed -i "/$line_to_delete/d" /etc/rc.local
+      # 检查是否删除成功
+      if grep -q "$line_to_delete" /etc/rc.local; then
+         echo "删除失败：行仍然存在。"
+      else
+         echo "行已成功删除。"
+      fi
+
+      ps | grep ipes | awk '{print $1}' | while read pid; do kill $pid; done
+      
+      ;;
+
+  esac
+
+  exit
+}
+
+stop() {
+    sed -i "/$line_to_delete/d" /etc/rc.local
+      # 检查是否删除成功
+      if grep -q "$line_to_delete" /etc/rc.local; then
+         echo "删除失败：行仍然存在。"
+      else
+         echo "行已成功删除。"
+      fi
+    # 杀死ipes进程
+    ps | grep ipes | awk '{print $1}' | while read pid; do kill $pid; done
+}

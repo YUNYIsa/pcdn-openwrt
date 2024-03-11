@@ -1,0 +1,4 @@
+
+config tietie
+	option area 'close'
+

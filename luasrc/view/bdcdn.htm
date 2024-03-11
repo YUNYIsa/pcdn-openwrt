@@ -1,0 +1,87 @@
+<%+header%>
+<style>
+    .box-border {
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        background-color: #f9f9f9;    }
+</style>
+
+<script type="text/javascript">
+    XHR.poll(2, '<%=luci.dispatcher.build_url("admin", "services", "bdcdn", "bdcdn_data")%>', null, function (x, info) {
+        if (info) {
+                        
+            if (e = document.getElementById('wanuptime')) {
+                var wanuptime = parseInt(info.wanuptime);
+                console.log(wanuptime); // 调试语句
+                if (!isNaN(wanuptime)) {
+                e.innerHTML = wanuptime + "分钟";
+            }
+            else {
+                e.innerHTML = "Invalid value";
+                 }
+            }
+            if (e = document.getElementById('uptime')) {
+                var uptime = parseInt(info.uptime);
+                console.log(uptime); // 调试语句
+                if (!isNaN(uptime)) {
+                e.innerHTML = uptime + "分钟";
+                }
+            else {
+                e.innerHTML = "Invalid value";
+                }
+            }
+            if (e = document.getElementById('snzt')) {
+    var snztStr = info.snzt;
+    console.log(snztStr); // 调试语句
+    if (snztStr) {
+        e.innerHTML = snztStr;
+    } else {
+        e.innerHTML = "注册状态异常";
+    }
+}
+            if (e = document.getElementById('vision'))
+		        e.innerHTML = String.format('%s', info.vision);
+                        e.style.color="green";
+            var e = document.getElementById('id');
+            if (e && info.id) {
+                e.innerHTML = info.id;
+                e.style.color="blue";
+            }
+        }
+    });
+</script>
+
+<h2 name="content">本电CDN</h2>
+<h4 name="content"><font color="#5e72e4">配置状态</font></h4>
+
+<div class="cbi-section">
+    <div class="table" width="100%">
+        <div class="tr">
+            <div class="td left box-border" width="33%"><%:固件版本%></div>
+            <div class="td left box-border" id="vision"></div>
+        </div> 
+         <div class="tr">
+            <div class="td left box-border" width="33%"><%:猕猴桃SN%></div>
+            <div class="td left box-border" id="id"></div>
+        </div>
+        <div class="tr">
+            <div class="td left box-border" width="33%"><%:网口时间%></div>
+            <div class="td left box-border" id="wanuptime"></div>
+        </div>  
+         <div class="tr">
+            <div class="td left box-border" width="33%"><%:注册状态%></div>
+            <div class="td left box-border" id="snzt"></div>
+        </div>
+        <div class="tr">
+             <div class="td left box-border" width="33%"><a href="https://www.bdkjcdn.com/transfer?cct=22568&cce=9c5fa1a17e4ced7bbc0c031c3de8cfd5" target="_blank"><%:注册账号网址%></a></div>
+             <div class="td left box-border"><%:邀请码22568%></div>
+        </div>
+
+
+
+    </div>
+</div>
+
+<%+footer%>

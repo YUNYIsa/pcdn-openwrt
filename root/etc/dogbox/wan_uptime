@@ -1,0 +1,11 @@
+#!/bin/bash
+. /lib/functions/network.sh
+
+network_flush_cache
+network_get_uptime wantime wan
+
+if [ -n "$wantime" ]; then
+	awk 'BEGIN{printf "%.1f\n",'$wantime'/60}'
+else
+	echo 0
+fi
